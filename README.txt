@@ -37,7 +37,25 @@ Should be as simple as
 Using MetaChecka2000
 =========
 
-More to come here...
+Running hmmer
+
+    from simplehmmer.simplehmmer import HMMERRunner
+    HR=HMMERRunner(prefix='frode')
+    HR.search('/path/to/some.hmm', '/path/to/some.fasta', '/path/to/save/to/')
+    
+Parsing results
+
+    from simplehmmer.simplehmmer import HMMERParser
+    with open('/path/to/save/to/frode_out.txt', 'r') as fh:
+         HP = HMMERParser(fh)
+         while True:
+             result = HP.next()
+             if result:
+                 print result
+             else:
+                 break
+
+Super simple!
 
 Licence and referencing
 =========

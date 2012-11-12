@@ -95,11 +95,12 @@ class HMMERRunner():
         We assume that a successful hmmsearch -h returns 0 and anything
         else returns something non-zero
         """
+        # redirect stdout so we don't get mess!
         try:
-            exit_status = system('hmmsearch -h')
+            exit_status = system('hmmsearch -h > /dev/null')
         except:
           print "Unexpected error!", sys.exc_info()[0]
-          raise  
+          raise
       
         if exit_status != 0:
             raise HMMERError("Error attempting to run hmmsearch, is it in your path?")
@@ -111,19 +112,12 @@ class HMMERRunner():
         txt_file = osp_join(outputDir, self.txtOut)
         hmm_file = osp_join(outputDir, self.hmmOut)
         
-        # redirect stdout to file
-        old_stdout = sys.stdout
-        sys.stdout = open(hmm_file, 'w')
-        
         # run hmmer!
-        system('hmmsearch --tblout %s %s %s' % (txt_file, db, query))
+        system('hmmsearch --tblout %s %s %s > %s' % (txt_file, db, query, hmm_file))
         
-        # restore the old stdout 
-        sys.stdout = old_stdout
-         
     def makeSurePathExists(self, path):
         try:
-            os.makedirs(path)
+            makedirs(path)
         except OSError as exception:
             if exception.errno != errno.EEXIST:
                 raise
