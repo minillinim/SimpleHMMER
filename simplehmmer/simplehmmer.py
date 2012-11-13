@@ -80,7 +80,7 @@ class HMMERRunner():
     """Wrapper for running HMMER3"""
     def __init__(self, mode="dom", prefix=''):
         # make sure HMMER is installed! 
-        self.checkForHMMER()
+        checkForHMMER()
 
         # set the mode
         if mode == "dom":
@@ -92,38 +92,22 @@ class HMMERRunner():
         # make the output file names
         (self.txtOut, self.hmmOut) = makeOutputFNs(prefix)
     
-    def checkForHMMER(self):
-        """Check to see if HMMER is on the system before we try fancy things
-        
-        We assume that a successful hmmsearch -h returns 0 and anything
-        else returns something non-zero
-        """
-        # redirect stdout so we don't get mess!
-        try:
-            exit_status = system('hmmsearch -h > /dev/null')
-        except:
-          print "Unexpected error!", sys.exc_info()[0]
-          raise
-      
-        if exit_status != 0:
-            raise HMMERError("Error attempting to run hmmsearch, is it in your path?")
-    
     def search(self, db, query, outputDir):
         """Do the search"""
         # make the output dir and files
-        self.makeSurePathExists(outputDir)
+        makeSurePathExists(outputDir)
         txt_file = osp_join(outputDir, self.txtOut)
         hmm_file = osp_join(outputDir, self.hmmOut)
         
         # run hmmer!
         system('hmmsearch --%s %s %s %s > %s' % (self.mode, txt_file, db, query, hmm_file))
         
-    def makeSurePathExists(self, path):
-        try:
-            makedirs(path)
-        except OSError as exception:
-            if exception.errno != errno.EEXIST:
-                raise
+def makeSurePathExists(path):
+    try:
+        makedirs(path)
+    except OSError as exception:
+        if exception.errno != errno.EEXIST:
+            raise
     
 def makeOutputFNs(prefix=''):
     """Consistent interface for making output filenames"""
@@ -134,6 +118,22 @@ def makeOutputFNs(prefix=''):
         txtOut = '%s_out.txt' % prefix
         hmmOut = '%s_out.hmmer3' % prefix
     return (txtOut, hmmOut) 
+
+def checkForHMMER():
+    """Check to see if HMMER is on the system before we try fancy things
+    
+    We assume that a successful hmmsearch -h returns 0 and anything
+    else returns something non-zero
+    """
+    # redirect stdout so we don't get mess!
+    try:
+        exit_status = system('hmmsearch -h > /dev/null')
+    except:
+      print "Unexpected error!", sys.exc_info()[0]
+      raise
+  
+    if exit_status != 0:
+        raise HMMERError("Error attempting to run hmmsearch, is it in your path?")
 
 ###############################################################################
 ###############################################################################
