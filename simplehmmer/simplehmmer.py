@@ -50,7 +50,7 @@ __author__ = "Michael Imelfort"
 __copyright__ = "Copyright 2012"
 __credits__ = ["Michael Imelfort"]
 __license__ = "GPL3"
-__version__ = "0.1.0"
+__version__ = "0.2.0"
 __maintainer__ = "Michael Imelfort"
 __email__ = "mike@mikeimelfort.com"
 __status__ = "Development"
@@ -70,6 +70,7 @@ import sys
 
 class FormatError(BaseException): pass
 class HMMERError(BaseException): pass
+class HMMMERModeError(BaseException): pass
 
 ###############################################################################
 ###############################################################################
@@ -87,20 +88,43 @@ class HMMERRunner():
             self.mode = 'domtblout'
         elif mode == "tbl":
             self.mode = 'tblout'
+        elif mode == 'align':
+            self.mode = 'align'
+        elif mode == 'fetch':
+            self.mode = 'fetch'
         else:
-            raise HMMERError("Mode %s not understood, please use 'dom' or 'tbl'" % mode)
+            raise HMMMERModeError("Mode %s not understood" % mode)
         # make the output file names
-        (self.txtOut, self.hmmOut) = makeOutputFNs(prefix)
+        (self.txtOut, self.hmmOut) = makeOutputFNs(prefix, mode=mode)
     
     def search(self, db, query, outputDir):
-        """Do the search"""
+        """Run hmmsearch"""
         # make the output dir and files
+        if self.mode != 'domtblout' or mode != 'tblout':
+            raise HMMMERModeError("Mode %s not compatible with search" % mode)
         makeSurePathExists(outputDir)
         txt_file = osp_join(outputDir, self.txtOut)
         hmm_file = osp_join(outputDir, self.hmmOut)
         
         # run hmmer!
         system('hmmsearch --%s %s %s %s > %s' % (self.mode, txt_file, db, query, hmm_file))
+
+    def align(self, db, query, outputFile, writeMode='>'):
+        """Run hmmalign"""
+        if self.mode != 'align':
+            raise HMMMERModeError("Mode %s not compatible with align" % mode)
+        # run hmmer!
+        system('hmmalign --outformat PSIBLAST %s %s %s %s' % (db, query, writeMode, outputFile))
+        
+    def fetch(self, db, key, fetchFileName, emitFileName=''):
+        """Run hmmfetch and possible hmmemit"""
+        if self.mode != 'fetch':
+            raise HMMMERModeError("Mode %s not compatible with fetch" % mode)
+        # run hmmer!
+        system('hmmfetch %s %s > %s' % (db, key, fetchFileName))
+        # run emit if we;ve been told to
+        if emitFileName != '':
+            system('hmmemit -c %s > %s' % (fetchFileName, emitFileName))
         
 def makeSurePathExists(path):
     try:
@@ -109,14 +133,20 @@ def makeSurePathExists(path):
         if exception.errno != errno.EEXIST:
             raise
     
-def makeOutputFNs(prefix=''):
+def makeOutputFNs(prefix='', mode='domtblout'):
     """Consistent interface for making output filenames"""
     if prefix == '':
         txtOut = 'hmmer_out.txt'
-        hmmOut = 'hmmer_out.hmmer3'
+        if mode == 'align':
+            hmmOut = 'hmmer_out.align'
+        else: 
+            hmmOut = 'hmmer_out.hmmer3'
     else:
         txtOut = '%s_out.txt' % prefix
-        hmmOut = '%s_out.hmmer3' % prefix
+        if mode == 'align':
+            hmmOut = '%s_out.align' % prefix
+        else: 
+            hmmOut = '%s_out.hmmer3' % prefix
     return (txtOut, hmmOut) 
 
 def checkForHMMER():
@@ -272,10 +302,10 @@ class HmmerHitDOM():
         """Load em' in"""
         if len(values) == 23:
             self.target_name = values[0]
-            self.accession = values[1]
+            self.target_accession = values[1]
             self.target_length = int(values[2])
             self.query_name = values[3]
-            self.accession = values[4]
+            self.query_accession = values[4]
             self.query_length = int(values[5])
             self.full_e_value = float(values[6])
             self.full_score = float(values[7])
@@ -298,10 +328,10 @@ class HmmerHitDOM():
     def __str__(self):
         """when we need to print"""
         return "\t".join([self.target_name,
-                          self.accession,
+                          self.target_accession,
                           str(self.target_length),
                           self.query_name,
-                          self.accession,
+                          self.query_accession,
                           str(self.query_length),
                           str(self.full_e_value),
                           str(self.full_score),
@@ -326,4 +356,5 @@ class HmmerHitDOM():
 ###############################################################################
 ###############################################################################
 ###############################################################################
+
         
