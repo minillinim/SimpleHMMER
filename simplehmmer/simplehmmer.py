@@ -50,7 +50,7 @@ __author__ = "Michael Imelfort"
 __copyright__ = "Copyright 2012"
 __credits__ = ["Michael Imelfort"]
 __license__ = "GPL3"
-__version__ = "0.2.0"
+__version__ = "0.2.1"
 __maintainer__ = "Michael Imelfort"
 __email__ = "mike@mikeimelfort.com"
 __status__ = "Development"
@@ -95,13 +95,13 @@ class HMMERRunner():
         else:
             raise HMMMERModeError("Mode %s not understood" % mode)
         # make the output file names
-        (self.txtOut, self.hmmOut) = makeOutputFNs(prefix, mode=mode)
+        (self.txtOut, self.hmmOut) = makeOutputFNs(prefix, mode=self.mode)
     
     def search(self, db, query, outputDir):
         """Run hmmsearch"""
         # make the output dir and files
-        if self.mode != 'domtblout' or mode != 'tblout':
-            raise HMMMERModeError("Mode %s not compatible with search" % mode)
+        if self.mode != 'domtblout' and self.mode != 'tblout':
+            raise HMMMERModeError("Mode %s not compatible with search" % self.mode)
         makeSurePathExists(outputDir)
         txt_file = osp_join(outputDir, self.txtOut)
         hmm_file = osp_join(outputDir, self.hmmOut)
@@ -114,12 +114,12 @@ class HMMERRunner():
         if self.mode != 'align':
             raise HMMMERModeError("Mode %s not compatible with align" % mode)
         # run hmmer!
-        system('hmmalign --outformat PSIBLAST %s %s %s %s' % (db, query, writeMode, outputFile))
+        system('hmmalign --allcol --outformat PSIBLAST %s %s %s %s' % (db, query, writeMode, outputFile))
         
     def fetch(self, db, key, fetchFileName, emitFileName=''):
         """Run hmmfetch and possible hmmemit"""
         if self.mode != 'fetch':
-            raise HMMMERModeError("Mode %s not compatible with fetch" % mode)
+            raise HMMMERModeError("Mode %s not compatible with fetch" % self.mode)
         # run hmmer!
         system('hmmfetch %s %s > %s' % (db, key, fetchFileName))
         # run emit if we;ve been told to

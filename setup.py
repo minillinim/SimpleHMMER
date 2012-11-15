@@ -2,7 +2,7 @@ from distutils.core import setup
 
 setup(
     name='SimpleHMMER',
-    version='0.2.0',
+    version='0.2.1',
     author='Michael Imelfort',
     author_email='mike@mikeimelfort.com',
     packages=['simplehmmer', 'simplehmmer.test'],
