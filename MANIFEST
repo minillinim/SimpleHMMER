@@ -3,5 +3,6 @@ LICENSE.txt
 README.txt
 setup.py
 simplehmmer/__init__.py
+simplehmmer/hmmmodelparser.py
 simplehmmer/simplehmmer.py
 simplehmmer/test/__init__.py
