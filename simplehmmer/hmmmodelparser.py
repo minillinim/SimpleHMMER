@@ -77,6 +77,89 @@ class HmmModel(object):
 			raise HmmModelError
 		return self.leng
 
+	def __str__(self):
+		ret = str()
+
+		print self.format
+		ret += "NAME\t" + self.name + "\n"
+		try:
+			ret += "ACC\t" + self.acc + "\n"
+		except AttributeError:
+			pass
+		try:
+			ret += "DESC\t" + self.desc + "\n"
+		except AttributeError:
+			pass
+		ret += "LENG\t"  + str(self.leng) + "\n"
+		ret += "ALPH\t" + self.alph + "\n"
+		try:
+			if self.rf is True:
+				ret += "RF\tyes\n"
+			else:
+				ret += "RF\tno\n"
+		except AttributeError:
+			pass
+		try:
+			if self.cs is True:
+				ret += "CS\tyes\n"
+			else:
+				ret += "CS\tno\n"
+		except AttributeError:
+			pass
+		try:
+			if self.map is True:
+				ret += "MAP\tyes\n"
+			else:
+				ret += "MAP\tno\n"
+		except AttributeError:
+			pass
+		try:
+			ret += "DATE\t" + self.date + "\n"
+		except AttributeError:
+			pass
+		try:
+			ret += "COM\t" + self.com + "\n"
+		except AttributeError:
+			pass
+		try:
+			ret += "NSEQ\t" + str(self.nseq) + "\n"
+		except AttributeError:
+			pass
+		try:
+			ret += "EFFN\t" + str(self.effn) + "\n"
+		except AttributeError:
+			pass
+		try:
+			ret += "CKSUM\t" + str(self.cksum) + "\n"
+		except AttributeError:
+			pass
+		try:
+			ret += "GA\t" + str(self.ga[0]) +" "+ str(self.ga[1]) + "\n"
+		except AttributeError:
+			pass
+		try:
+			ret += "TC\t" + str(self.tc[0]) +" "+ str(self.tc[1]) + "\n"
+		except AttributeError:
+			pass
+		try:
+			ret += "NC\t" + str(self.nc[0]) +" "+ str(self.nc[1]) + "\n"
+		except AttributeError:
+			pass
+		try:
+			ret += "STATS LOCAL MSV\t" + str(self.stats_local_msv[0]) +" "+ str(self.stats_local_msv[1]) + "\n"
+		except AttributeError:
+			pass
+		try:
+			ret += "STATS LOCAL VITERBI\t" + str(self.stats_local_viterbi[0]) +" "+ str(self.stats_local_viterbi[1]) + "\n"
+		except AttributeError:
+			pass
+		try:
+			ret += "STATS LOCAL FORWARD\t"+ str(self.stats_local_forward[0]) +" "+ str(self.stats_local_forward[1]) + "\n" 
+		except AttributeError:
+			pass
+		ret += "//\n"
+		return ret
+
 		
 class HmmModelParser(object):
 	"""HmmModelParser holds a file object for a HMM model and a custom iterator
@@ -127,21 +210,9 @@ class HmmModelParser(object):
 						if params[0] != "LOCAL":
 							raise HmmModelError
 						if params[1] == "MSV" or params[1] == "VITERBI" or params[1] == "FORWARD":
-							header_keys[fields[0]+"_"+params[0]+"_"+params[1].lower()] = (float(params[2]), float(params[3]))
+							header_keys[(fields[0]+"_"+params[0]+"_"+params[1]).lower()] = (float(params[2]), float(params[3]))
 						else:
 							print("'"+params[1]+"'")
 							raise HmmModelError
 					else:
 						header_keys[fields[0].lower()] = fields[1]
-
-
-if __name__ == '__main__':
-	parser = HmmModelParser(sys.argv[1])
-
-	for model in parser.parse():
-	 	print model.name, len(model)
-
-
-
-		
-		
