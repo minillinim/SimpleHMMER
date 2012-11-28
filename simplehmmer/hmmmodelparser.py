@@ -189,7 +189,7 @@ class HmmModelParser(object):
 
 			else:
 				# header sections
-				fields = current_line.rstrip().split(None, 1)
+				fields = current_line.rstrip(' ;\n').split(None, 1)
 				if 2 != len(fields):
 					raise HmmModelError
 				else:
@@ -207,7 +207,11 @@ class HmmModelParser(object):
 						params = fields[1].split()
 						if len(params) != 2:
 							raise HmmModelError
-						header_keys[fields[0].lower()] = (float(params[0]), float(params[1]))
+						try:
+							header_keys[fields[0].lower()] = (float(params[0]), float(params[1]))
+						except ValueError:
+							print params[0], params[1]
+							raise
 					elif fields[0] == "STATS":
 						params = fields[1].split()
 						if params[0] != "LOCAL":
