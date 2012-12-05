@@ -109,12 +109,20 @@ class HMMERRunner():
         # run hmmer!
         system('hmmsearch --%s %s %s %s > %s' % (self.mode, txt_file, db, query, hmm_file))
 
-    def align(self, db, query, outputFile, writeMode='>'):
+    def align(self, db, query, outputFile, writeMode='>',
+            outputFormat='PSIBLAST', allcol=True, trim=True):
         """Run hmmalign"""
         if self.mode != 'align':
             raise HMMMERModeError("Mode %s not compatible with align" % mode)
+        #build up the option string
+        opts=''
+        if allcol:
+            opts+=' --allcol '
+        if trim:
+            opts+=' --trim '
         # run hmmer!
-        system('hmmalign --allcol --outformat PSIBLAST %s %s %s %s' % (db, query, writeMode, outputFile))
+        cmd = 'hmmalign%s--outformat %s %s %s %s %s' % (opts, outputFormat, db, query, writeMode, outputFile)
+        system(cmd)
         
     def fetch(self, db, key, fetchFileName, emitFileName=''):
         """Run hmmfetch and possible hmmemit"""
