@@ -172,6 +172,8 @@ class HmmModelParser(object):
 		fields = []
 		header_keys = dict()
 		for current_line in self.hmmfile:
+			if 0 == len(current_line.rstrip()):
+				continue
 			# line should be: HMMER3/b [3.0b2 | June 2009]
 			if current_line.startswith("HMMER"):
 				header_keys['format'] = current_line.rstrip()
@@ -183,10 +185,11 @@ class HmmModelParser(object):
 				for current_line in self.hmmfile:
 					if current_line.startswith("//"):
 						yield HmmModel(header_keys)
+						break
 
 			else:
 				# header sections
-				fields = current_line.rstrip().split(None, 1)
+				fields = current_line.rstrip(' ;\n').split(None, 1)
 				if 2 != len(fields):
 					raise HmmModelError
 				else:
@@ -204,7 +207,11 @@ class HmmModelParser(object):
 						params = fields[1].split()
 						if len(params) != 2:
 							raise HmmModelError
-						header_keys[fields[0].lower()] = (float(params[0]), float(params[1]))
+						try:
+							header_keys[fields[0].lower()] = (float(params[0]), float(params[1]))
+						except ValueError:
+							print params[0], params[1]
+							raise
 					elif fields[0] == "STATS":
 						params = fields[1].split()
 						if params[0] != "LOCAL":
