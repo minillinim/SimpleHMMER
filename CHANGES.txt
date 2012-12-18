@@ -4,3 +4,4 @@ v0.1.0, 13/11/2012 -- Added support for domtblout
 v0.2.0, 14/11/2012 -- Added support for making alignments
 v0.2.0, 15/11/2012 -- Minor bug fixes
 v0.2.2, 26/11/2012 -- Added Connors model parser
+v0.2.3, 18/12/2012 -- More bug fixes from connor
