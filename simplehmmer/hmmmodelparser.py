@@ -187,6 +187,7 @@ class HmmModelParser(object):
                 for current_line in self.hmmfile:
                     if current_line.startswith("//"):
                         yield HmmModel(header_keys, model)
+                        break
                     else:
                         model += current_line
 
