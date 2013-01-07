@@ -62,157 +62,163 @@ import errno
 import sys
 
 class HmmModelError(Exception):
-	pass
-		
+    pass
+
 
 class HmmModel(object):
-	"""docstring for HmmModel"""
-	def __init__(self, keys):
-		super(HmmModel, self).__init__()
-		for key, value in keys.items():
-			setattr(self, key, value)
+    """docstring for HmmModel"""
+    def __init__(self, keys, model=None):
+        super(HmmModel, self).__init__()
+        for key, value in keys.items():
+            setattr(self, key, value)
+        self.model = model
 
-	def __len__(self):
-		if self.leng is None:
-			raise HmmModelError
-		return self.leng
+    def __len__(self):
+        if self.leng is None:
+            raise HmmModelError
+        return self.leng
 
-	def __str__(self):
-		ret = str()
+    def __str__(self):
+        ret = str()
 
-		print self.format
-		ret += "NAME\t" + self.name + "\n"
-		try:
-			ret += "ACC\t" + self.acc + "\n"
-		except AttributeError:
-			pass
-		try:
-			ret += "DESC\t" + self.desc + "\n"
-		except AttributeError:
-			pass
-		ret += "LENG\t"  + str(self.leng) + "\n"
-		ret += "ALPH\t" + self.alph + "\n"
-		try:
-			if self.rf is True:
-				ret += "RF\tyes\n"
-			else:
-				ret += "RF\tno\n"
-		except AttributeError:
-			pass
-		try:
-			if self.cs is True:
-				ret += "CS\tyes\n"
-			else:
-				ret += "CS\tno\n"
-		except AttributeError:
-			pass
-		try:
-			if self.map is True:
-				ret += "MAP\tyes\n"
-			else:
-				ret += "MAP\tno\n"
-		except AttributeError:
-			pass
-		try:
-			ret += "DATE\t" + self.date + "\n"
-		except AttributeError:
-			pass
-		try:
-			ret += "COM\t" + self.com + "\n"
-		except AttributeError:
-			pass
-		try:
-			ret += "NSEQ\t" + str(self.nseq) + "\n"
-		except AttributeError:
-			pass
-		try:
-			ret += "EFFN\t" + str(self.effn) + "\n"
-		except AttributeError:
-			pass
-		try:
-			ret += "CKSUM\t" + str(self.cksum) + "\n"
-		except AttributeError:
-			pass
-		try:
-			ret += "GA\t" + str(self.ga[0]) +" "+ str(self.ga[1]) + "\n"
-		except AttributeError:
-			pass
-		try:
-			ret += "TC\t" + str(self.tc[0]) +" "+ str(self.tc[1]) + "\n"
-		except AttributeError:
-			pass
-		try:
-			ret += "NC\t" + str(self.nc[0]) +" "+ str(self.nc[1]) + "\n"
-		except AttributeError:
-			pass
-		try:
-			ret += "STATS LOCAL MSV\t" + str(self.stats_local_msv[0]) +" "+ str(self.stats_local_msv[1]) + "\n"
-		except AttributeError:
-			pass
-		try:
-			ret += "STATS LOCAL VITERBI\t" + str(self.stats_local_viterbi[0]) +" "+ str(self.stats_local_viterbi[1]) + "\n"
-		except AttributeError:
-			pass
-		try:
-			ret += "STATS LOCAL FORWARD\t"+ str(self.stats_local_forward[0]) +" "+ str(self.stats_local_forward[1]) + "\n" 
-		except AttributeError:
-			pass
-		ret += "//\n"
-		return ret
+        print self.format
+        ret += "NAME\t" + self.name + "\n"
+        try:
+            ret += "ACC\t" + self.acc + "\n"
+        except AttributeError:
+            pass
+        try:
+            ret += "DESC\t" + self.desc + "\n"
+        except AttributeError:
+            pass
+        ret += "LENG\t"  + str(self.leng) + "\n"
+        ret += "ALPH\t" + self.alph + "\n"
+        try:
+            if self.rf is True:
+                ret += "RF\tyes\n"
+            else:
+                ret += "RF\tno\n"
+        except AttributeError:
+            pass
+        try:
+            if self.cs is True:
+                ret += "CS\tyes\n"
+            else:
+                ret += "CS\tno\n"
+        except AttributeError:
+            pass
+        try:
+            if self.map is True:
+                ret += "MAP\tyes\n"
+            else:
+                ret += "MAP\tno\n"
+        except AttributeError:
+            pass
+        try:
+            ret += "DATE\t" + self.date + "\n"
+        except AttributeError:
+            pass
+        try:
+            ret += "COM\t" + self.com + "\n"
+        except AttributeError:
+            pass
+        try:
+            ret += "NSEQ\t" + str(self.nseq) + "\n"
+        except AttributeError:
+            pass
+        try:
+            ret += "EFFN\t" + str(self.effn) + "\n"
+        except AttributeError:
+            pass
+        try:
+            ret += "CKSUM\t" + str(self.cksum) + "\n"
+        except AttributeError:
+            pass
+        try:
+            ret += "GA\t" + str(self.ga[0]) +" "+ str(self.ga[1]) + "\n"
+        except AttributeError:
+            pass
+        try:
+            ret += "TC\t" + str(self.tc[0]) +" "+ str(self.tc[1]) + "\n"
+        except AttributeError:
+            pass
+        try:
+            ret += "NC\t" + str(self.nc[0]) +" "+ str(self.nc[1]) + "\n"
+        except AttributeError:
+            pass
+        try:
+            ret += "STATS LOCAL MSV\t" + str(self.stats_local_msv[0]) +" "+ str(self.stats_local_msv[1]) + "\n"
+        except AttributeError:
+            pass
+        try:
+            ret += "STATS LOCAL VITERBI\t" + str(self.stats_local_viterbi[0]) +" "+ str(self.stats_local_viterbi[1]) + "\n"
+        except AttributeError:
+            pass
+        try:
+            ret += "STATS LOCAL FORWARD\t"+ str(self.stats_local_forward[0]) +" "+ str(self.stats_local_forward[1]) + "\n" 
+        except AttributeError:
+            pass
+        if self.model is not None:
+            ret += self.model
+        ret += "//\n"
+        return ret
 
-		
+
 class HmmModelParser(object):
-	"""HmmModelParser holds a file object for a HMM model and a custom iterator
-	   for getting the values out"""
-	def __init__(self, hmmfile):
-		super(HmmModelParser, self).__init__()
-		self.hmmfile = open(hmmfile)
+    """HmmModelParser holds a file object for a HMM model and a custom iterator
+       for getting the values out"""
+    def __init__(self, hmmfile):
+        super(HmmModelParser, self).__init__()
+        self.hmmfile = open(hmmfile)
 
-	def parse(self):
-		fields = []
-		header_keys = dict()
-		for current_line in self.hmmfile:
-			# line should be: HMMER3/b [3.0b2 | June 2009]
-			if current_line.startswith("HMMER"):
-				header_keys['format'] = current_line.rstrip()
-			
-			elif current_line.startswith("HMM"):
-				# begining of the model hmm
-				# parsing not implemented at the moment - iterate through till
-				# the end of this model
-				for current_line in self.hmmfile:
-					if current_line.startswith("//"):
-						yield HmmModel(header_keys)
+    def parse(self):
+        fields = []
+        header_keys = dict()
+        for current_line in self.hmmfile:
+            # line should be: HMMER3/b [3.0b2 | June 2009]
+            if current_line.startswith("HMMER"):
+                header_keys['format'] = current_line.rstrip()
 
-			else:
-				# header sections
-				fields = current_line.rstrip().split(None, 1)
-				if 2 != len(fields):
-					raise HmmModelError
-				else:
-					# transform some data based on some of the header tags
-					if fields[0] == "LENG" or fields[0] == "NSEQ" or fields[0] == "CKSUM":
-						header_keys[fields[0].lower()] = int(fields[1])
-					elif fields[0] == "RF" or fields[0] == "CS" or fields[0] == "MAP":
-						if fields[1].lower() == "no":
-							header_keys[fields[0].lower()] = False
-						else:
-							header_keys[fields[0].lower()] = True
-					elif fields[0] == "EFFN":
-						header_keys[fields[0].lower()] = float(fields[1])
-					elif fields[0] == "GA" or fields[0] == "TC" or fields[0] == "NC":
-						params = fields[1].split()
-						if len(params) != 2:
-							raise HmmModelError
-						header_keys[fields[0].lower()] = (float(params[0]), float(params[1]))
-					elif fields[0] == "STATS":
-						params = fields[1].split()
-						if params[0] != "LOCAL":
-							raise HmmModelError
-						if params[1] == "MSV" or params[1] == "VITERBI" or params[1] == "FORWARD":
-							header_keys[(fields[0]+"_"+params[0]+"_"+params[1]).lower()] = (float(params[2]), float(params[3]))
-						else:
-							print("'"+params[1]+"'")
-							raise HmmModelError
-					else:
-						header_keys[fields[0].lower()] = fields[1]
+            elif current_line.startswith("HMM"):
+                # begining of the model hmm
+                # parsing not implemented at the moment - iterate through till
+                # the end of this model
+                model = ""
+                for current_line in self.hmmfile:
+                    if current_line.startswith("//"):
+                        yield HmmModel(header_keys, model)
+                    else:
+                        model += current_line
+
+            else:
+                # header sections
+                fields = current_line.rstrip().split(None, 1)
+                if 2 != len(fields):
+                    raise HmmModelError
+                else:
+                    # transform some data based on some of the header tags
+                    if fields[0] == "LENG" or fields[0] == "NSEQ" or fields[0] == "CKSUM":
+                        header_keys[fields[0].lower()] = int(fields[1])
+                    elif fields[0] == "RF" or fields[0] == "CS" or fields[0] == "MAP":
+                        if fields[1].lower() == "no":
+                            header_keys[fields[0].lower()] = False
+                        else:
+                            header_keys[fields[0].lower()] = True
+                    elif fields[0] == "EFFN":
+                        header_keys[fields[0].lower()] = float(fields[1])
+                    elif fields[0] == "GA" or fields[0] == "TC" or fields[0] == "NC":
+                        params = fields[1].split()
+                        if len(params) != 2:
+                            raise HmmModelError
+                        header_keys[fields[0].lower()] = (float(params[0]), float(params[1]))
+                    elif fields[0] == "STATS":
+                        params = fields[1].split()
+                        if params[0] != "LOCAL":
+                            raise HmmModelError
+                        if params[1] == "MSV" or params[1] == "VITERBI" or params[1] == "FORWARD":
+                            header_keys[(fields[0]+"_"+params[0]+"_"+params[1]).lower()] = (float(params[2]), float(params[3]))
+                        else:
+                            print("'"+params[1]+"'")
+                            raise HmmModelError
+                    else:
+                        header_keys[fields[0].lower()] = fields[1]
