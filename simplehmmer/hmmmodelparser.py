@@ -79,7 +79,7 @@ class HmmModel(object):
         return self.leng
 
     def __str__(self):
-        ret = self.format
+        ret = '%s\n' % self.format
         ret += "NAME\t" + self.name + "\n"
         try:
             ret += "ACC\t" + self.acc + "\n"
