@@ -79,9 +79,7 @@ class HmmModel(object):
         return self.leng
 
     def __str__(self):
-        ret = str()
-
-        print self.format
+        ret = self.format
         ret += "NAME\t" + self.name + "\n"
         try:
             ret += "ACC\t" + self.acc + "\n"
@@ -183,7 +181,7 @@ class HmmModelParser(object):
                 # begining of the model hmm
                 # parsing not implemented at the moment - iterate through till
                 # the end of this model
-                model = ""
+                model = current_line
                 for current_line in self.hmmfile:
                     if current_line.startswith("//"):
                         yield HmmModel(header_keys, model)
