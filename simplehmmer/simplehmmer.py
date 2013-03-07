@@ -196,7 +196,7 @@ class HMMERParser():
             if self.mode == 'domtblout':
                 hit = self.readHitsDOM()
             elif self.mode == 'tblout':
-                self.hit = self.readHitsTBL()
+                hit = self.readHitsTBL()
             else:
                 raise HMMERError("Mode %s not understood" % self.mode)        
 
