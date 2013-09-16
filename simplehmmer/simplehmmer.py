@@ -96,8 +96,8 @@ class HMMERRunner():
             raise HMMMERModeError("Mode %s not understood" % mode)
         # make the output file names
         (self.txtOut, self.hmmOut) = makeOutputFNs(prefix, mode=self.mode)
-
-    def search(self, db, query, outputDir, bUseHeuristics=True):
+    
+    def search(self, db, query, outputDir, cmdline_options=''):
         """Run hmmsearch"""
         # make the output dir and files
         if self.mode != 'domtblout' and self.mode != 'tblout':
@@ -107,10 +107,8 @@ class HMMERRunner():
         hmm_file = osp_join(outputDir, self.hmmOut)
 
         # run hmmer!
-        if bUseHeuristics:
-          system('hmmsearch --%s %s %s %s > %s' % (self.mode, txt_file, db, query, hmm_file))
-        else:
-          system('hmmsearch --max --%s %s %s %s > %s' % (self.mode, txt_file, db, query, hmm_file))
+        cmd = ('hmmsearch --%s %s %s %s %s > %s' % (self.mode, txt_file, cmdline_options, db, query, hmm_file))
+        system(cmd)
 
     def align(self, db, query, outputFile, writeMode='>',
             outputFormat='PSIBLAST', allcol=True, trim=True):
