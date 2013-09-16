@@ -10,11 +10,11 @@
 #                                                                             #
 #            .d8888b.  d8b                        888                         #
 #           d88P  Y88b Y8P                        888                         #
-#           Y88b.                                 888                         # 
+#           Y88b.                                 888                         #
 #            "Y888b.   888 88888b.d88b.  88888b.  888  .d88b.                 #
 #               "Y88b. 888 888 "888 "88b 888 "88b 888 d8P  Y8b                #
 #                 "888 888 888  888  888 888  888 888 88888888                #
-#           Y88b  d88P 888 888  888  888 888 d88P 888 Y8b.   .                #    
+#           Y88b  d88P 888 888  888  888 888 d88P 888 Y8b.   .                #
 #            "Y8888P"  888 888  888  888 88888P"  888  "Y8888                 #
 #                                        888                                  #
 #                                        888                                  #
@@ -22,7 +22,7 @@
 #                                                                             #
 #        888    888 888b     d888 888b     d888 8888888888 8888888b.          #
 #        888    888 8888b   d8888 8888b   d8888 888        888   Y88b         #
-#        888    888 88888b.d88888 88888b.d88888 888        888    888         # 
+#        888    888 88888b.d88888 88888b.d88888 888        888    888         #
 #        8888888888 888Y88888P888 888Y88888P888 8888888    888   d88P         #
 #        888    888 888 Y888P 888 888 Y888P 888 888        8888888P"          #
 #        888    888 888  Y8P  888 888  Y8P  888 888        888 T88b           #
@@ -80,7 +80,7 @@ class HMMMERModeError(BaseException): pass
 class HMMERRunner():
     """Wrapper for running HMMER3"""
     def __init__(self, mode="dom", prefix=''):
-        # make sure HMMER is installed! 
+        # make sure HMMER is installed!
         checkForHMMER()
 
         # set the mode
@@ -105,7 +105,7 @@ class HMMERRunner():
         makeSurePathExists(outputDir)
         txt_file = osp_join(outputDir, self.txtOut)
         hmm_file = osp_join(outputDir, self.hmmOut)
-        
+
         # run hmmer!
         cmd = ('hmmsearch --%s %s %s %s %s > %s' % (self.mode, txt_file, cmdline_options, db, query, hmm_file))
         system(cmd)
@@ -124,7 +124,7 @@ class HMMERRunner():
         # run hmmer!
         cmd = 'hmmalign%s--outformat %s %s %s %s %s' % (opts, outputFormat, db, query, writeMode, outputFile)
         system(cmd)
-        
+
     def fetch(self, db, key, fetchFileName, emitFileName=''):
         """Run hmmfetch and possible hmmemit"""
         if self.mode != 'fetch':
@@ -134,33 +134,33 @@ class HMMERRunner():
         # run emit if we;ve been told to
         if emitFileName != '':
             system('hmmemit -c %s > %s' % (fetchFileName, emitFileName))
-        
+
 def makeSurePathExists(path):
     try:
         makedirs(path)
     except OSError as exception:
         if exception.errno != errno.EEXIST:
             raise
-    
+
 def makeOutputFNs(prefix='', mode='domtblout'):
     """Consistent interface for making output filenames"""
     if prefix == '':
         txtOut = 'hmmer_out.txt'
         if mode == 'align':
             hmmOut = 'hmmer_out.align'
-        else: 
+        else:
             hmmOut = 'hmmer_out.hmmer3'
     else:
         txtOut = '%s_out.txt' % prefix
         if mode == 'align':
             hmmOut = '%s_out.align' % prefix
-        else: 
+        else:
             hmmOut = '%s_out.hmmer3' % prefix
-    return (txtOut, hmmOut) 
+    return (txtOut, hmmOut)
 
 def checkForHMMER():
     """Check to see if HMMER is on the system before we try fancy things
-    
+
     We assume that a successful hmmsearch -h returns 0 and anything
     else returns something non-zero
     """
@@ -170,7 +170,7 @@ def checkForHMMER():
     except:
       print "Unexpected error!", sys.exc_info()[0]
       raise
-  
+
     if exit_status != 0:
         raise HMMERError("Error attempting to run hmmsearch, is it in your path?")
 
@@ -189,8 +189,8 @@ class HMMERParser():
         elif mode == 'tbl':
             self.mode = 'tblout'
         else:
-            raise HMMERError("Mode %s not understood, please use 'dom' or 'tbl'" % mode)        
-    
+            raise HMMERError("Mode %s not understood, please use 'dom' or 'tbl'" % mode)
+
     def next(self):
         """Get the next result in the file"""
         while 1:
@@ -199,7 +199,7 @@ class HMMERParser():
             elif self.mode == 'tblout':
                 hit = self.readHitsTBL()
             else:
-                raise HMMERError("Mode %s not understood" % self.mode)        
+                raise HMMERError("Mode %s not understood" % self.mode)
 
             if hit == {}:
                 return None
@@ -274,8 +274,8 @@ class HmmerHitTBL():
             self.dom = int(values[15])
             self.rep = int(values[16])
             self.inc = int(values[17])
-            self.target_description = values[18]    
-    
+            self.target_description = values[18]
+
     def __str__(self):
         """when we need to print"""
         return "\t".join([self.target_name,
@@ -333,7 +333,7 @@ class HmmerHitDOM():
             self.env_to = int(values[20])
             self.acc = float(values[21])
             self.target_description = values[22]
-                
+
     def __str__(self):
         """when we need to print"""
         return "\t".join([self.target_name,
@@ -366,4 +366,4 @@ class HmmerHitDOM():
 ###############################################################################
 ###############################################################################
 
-        
+

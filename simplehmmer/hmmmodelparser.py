@@ -10,11 +10,11 @@
 #                                                                             #
 #            .d8888b.  d8b                        888                         #
 #           d88P  Y88b Y8P                        888                         #
-#           Y88b.                                 888                         # 
+#           Y88b.                                 888                         #
 #            "Y888b.   888 88888b.d88b.  88888b.  888  .d88b.                 #
 #               "Y88b. 888 888 "888 "88b 888 "88b 888 d8P  Y8b                #
 #                 "888 888 888  888  888 888  888 888 88888888                #
-#           Y88b  d88P 888 888  888  888 888 d88P 888 Y8b.   .                #    
+#           Y88b  d88P 888 888  888  888 888 d88P 888 Y8b.   .                #
 #            "Y8888P"  888 888  888  888 88888P"  888  "Y8888                 #
 #                                        888                                  #
 #                                        888                                  #
@@ -22,7 +22,7 @@
 #                                                                             #
 #        888    888 888b     d888 888b     d888 8888888888 8888888b.          #
 #        888    888 8888b   d8888 8888b   d8888 888        888   Y88b         #
-#        888    888 88888b.d88888 88888b.d88888 888        888    888         # 
+#        888    888 88888b.d88888 88888b.d88888 888        888    888         #
 #        8888888888 888Y88888P888 888Y88888P888 8888888    888   d88P         #
 #        888    888 888 Y888P 888 888 Y888P 888 888        8888888P"          #
 #        888    888 888  Y8P  888 888  Y8P  888 888        888 T88b           #
@@ -155,7 +155,7 @@ class HmmModel(object):
         except AttributeError:
             pass
         try:
-            ret += "STATS LOCAL FORWARD\t"+ str(self.stats_local_forward[0]) +" "+ str(self.stats_local_forward[1]) + "\n" 
+            ret += "STATS LOCAL FORWARD\t"+ str(self.stats_local_forward[0]) +" "+ str(self.stats_local_forward[1]) + "\n"
         except AttributeError:
             pass
         if self.model is not None:
@@ -211,7 +211,7 @@ class HmmModelParser(object):
                         params = fields[1].split()
                         if len(params) != 2:
                             raise HmmModelError
-                        header_keys[fields[0].lower()] = (float(params[0]), float(params[1]))
+                        header_keys[fields[0].lower()] = (float(params[0].replace(';','')), float(params[1].replace(';','')))
                     elif fields[0] == "STATS":
                         params = fields[1].split()
                         if params[0] != "LOCAL":
