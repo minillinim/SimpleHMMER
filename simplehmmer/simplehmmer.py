@@ -166,7 +166,10 @@ def checkForHMMER():
     """
     # redirect stdout so we don't get mess!
     try:
-        exit_status = system('hmmsearch -h > /dev/null')
+        if sys.platform == "win32":
+            exit_status = system('hmmsearch -h > NUL')
+        else:
+            exit_status = system('hmmsearch -h > /dev/null')
     except:
       print "Unexpected error!", sys.exc_info()[0]
       raise
