@@ -171,7 +171,7 @@ def checkForHMMER():
         else:
             exit_status = system('hmmsearch -h > /dev/null')
     except:
-      print "Unexpected error!", sys.exc_info()[0]
+      print("Unexpected error!", sys.exc_info()[0])
       raise
 
     if exit_status != 0:
